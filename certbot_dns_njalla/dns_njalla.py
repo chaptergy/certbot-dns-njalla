@@ -53,14 +53,18 @@ class Authenticator(dns_common.DNSAuthenticator):
             },
         )
 
+    def _remove_subdomains(self, domain):
+        split_domain = domain.split('.')
+        return f'{split_domain[-2]}.{split_domain[-1]}'
+
     def _perform(self, domain, validation_name, validation):
         self._get_njalla_client().add_txt_record(
-            domain, validation_name, validation, self.ttl
+            self._remove_subdomains(domain), validation_name, validation
         )
 
     def _cleanup(self, domain, validation_name, validation):
         self._get_njalla_client().del_txt_record(
-            domain, validation_name, validation, self.ttl
+            self._remove_subdomains(domain), validation_name, validation
         )
 
     def _get_njalla_client(self):

@@ -7,7 +7,7 @@ to allow customers to prove control of a domain name.
 
 1. Obtain an Njalla API token (found in the [settings](https://njal.la/settings/api/))
 
-2. Install the plugin using `pip3 install certbot-dns-njalla`
+2. Install the plugin using `pip3 install certbot-dns-njalla`, or if you are using `sudo` with certbot use `sudo -H pip3 install certbot-dns-njalla`
 
 3. Create a `njalla.ini` config file with the following contents and apply `chmod 600 njalla.ini` on it:
 
