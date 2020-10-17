@@ -2,7 +2,7 @@ from os import path
 from setuptools import setup
 from setuptools import find_packages
 
-version = "0.0.4"
+version = "1.0.0"
 
 install_requires = [
     'acme>=0.31.0',
