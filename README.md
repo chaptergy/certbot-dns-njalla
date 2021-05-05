@@ -11,19 +11,28 @@ to allow customers to prove control of a domain name.
 
 3. Create a `njalla.ini` config file with the following contents and apply `chmod 600 njalla.ini` on it:
 
-   ```
-   certbot_dns_njalla:dns_njalla_token=0000000000000000000000000000000000000000
+   ```ini
+   certbot_dns_njalla:dns_njalla_token=<token>
    ```
 
-   Replace the zeroes with your Njalla API key and ensure permissions are set
+   Replace `<token>` with your Njalla API key and ensure permissions are set
    to disallow access to other users.
 
 4. Run `certbot` and direct it to use the plugin for authentication and to use
    the config file previously created:
+   ```sh
+   certbot -a certbot-dns-njalla:dns-njalla --certbot-dns-njalla:dns-njalla-credentials njalla.ini -d domain.com
    ```
-   certbot certonly -a certbot-dns-njalla:dns-njalla --certbot-dns-njalla:dns-njalla-credentials njalla.ini -d domain.com
-   ```
+   Use `*.domain.com` if you want to generate it as a wildcard certificate.  
    Add additional options as required to specify an installation plugin etc.
+
+## Run Tests
+
+Execute the following command inside the root-directory
+
+```sh
+python -m unittest discover -p '*_test.py'
+```
 
 ## Distribution
 

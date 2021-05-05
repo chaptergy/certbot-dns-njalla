@@ -25,13 +25,13 @@ class AuthenticatorTest(test_util.TempDirTestCase,
 
         path = os.path.join(self.tempdir, 'file.ini')
         dns_test_common.write(
-            {"token": API_TOKEN},
+            {"njalla_token": API_TOKEN},
             path
         )
 
-        print("File content: ")
-        with open(path) as f:
-            print(f.read())
+        # print("File content: ")
+        # with open(path) as f:
+        #     print(f.read())
 
         self.config = mock.MagicMock(njalla_credentials=path,
                                      njalla_propagation_seconds=0)  # don't wait during tests
