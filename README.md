@@ -26,7 +26,17 @@ to allow customers to prove control of a domain name.
    Use `*.domain.com` if you want to generate it as a wildcard certificate.  
    Add additional options as required to specify an installation plugin etc.
 
-## Run Tests
+## Development
+
+### Install local files as python package
+
+Run the following command replacing `<path>` with the path to the folder containing the `setup.py` file (`./` when in repository root):
+
+```sh
+pip3 install -e <path>
+```
+
+### Run tests
 
 Execute the following command inside the root-directory
 
