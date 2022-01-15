@@ -47,11 +47,15 @@ sudo snap connect certbot:plugin certbot-dns-njalla
 
 4. Run `certbot` and direct it to use the plugin for authentication and to use
    the config file previously created:
+
    ```sh
    certbot -a dns-njalla --dns-njalla-credentials njalla.ini -d domain.com
    ```
+
    Use `*.domain.com` if you want to generate it as a wildcard certificate.  
    Add additional options as required to specify an installation plugin etc.
+
+   Remember to use the `-i` flag if you want to use an additional installer plugin, like `-i apache` or `-i nginx`.
 
 ## Development
 
