@@ -1,10 +1,6 @@
 """DNS Authenticator for Njalla."""
 import logging
 
-import zope.interface
-from certbot import interfaces
-from certbot import errors
-
 from certbot.plugins import dns_common
 from certbot.plugins import dns_common_lexicon
 
@@ -13,8 +9,6 @@ from lexicon.providers import njalla
 logger = logging.getLogger(__name__)
 
 
-@zope.interface.implementer(interfaces.IAuthenticator)
-@zope.interface.provider(interfaces.IPluginFactory)
 class Authenticator(dns_common.DNSAuthenticator):
     """DNS Authenticator for Njalla
 
