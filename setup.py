@@ -2,15 +2,14 @@ from os import path
 from setuptools import setup
 from setuptools import find_packages
 
-version = "1.0.1"
+version = "1.0.2"
 
 install_requires = [
-    'acme>=0.31.0',
     'certbot>=0.31.0',
     'dns-lexicon>=3.4.1',
-    'dnspython',
+]
+test_requirements = [
     'mock',
-    'setuptools',
     'requests'
 ]
 
@@ -51,6 +50,7 @@ setup(
     ],
     packages=find_packages(),
     install_requires=install_requires,
+    tests_require=test_requirements,
     entry_points={
         "certbot.plugins": [
             "dns-njalla = certbot_dns_njalla.dns_njalla:Authenticator"
