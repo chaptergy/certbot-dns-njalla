@@ -75,7 +75,7 @@ Do the basic setup described in the [certbot snap readme](https://github.com/cer
 Run the following command in the repository root (so you are in the folder containing the `setup.py`):
 
 ```sh
-sh generate-snap.sh
+sh generate_dnsplugins_snapcraft.sh
 snapcraft clean --use-lxd
 snapcraft --debug --use-lxd
 ```

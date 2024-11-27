@@ -1,15 +1,12 @@
 """DNS Authenticator for Njalla."""
 import logging
 
-from certbot.plugins import dns_common
 from certbot.plugins import dns_common_lexicon
-
-from lexicon.providers import njalla
 
 logger = logging.getLogger(__name__)
 
 
-class Authenticator(dns_common.DNSAuthenticator):
+class Authenticator(dns_common_lexicon.LexiconDNSAuthenticator):
     """DNS Authenticator for Njalla
 
     This Authenticator uses the Njalla REST API to fulfill a dns-01 challenge.
@@ -20,7 +17,9 @@ class Authenticator(dns_common.DNSAuthenticator):
 
     def __init__(self, *args, **kwargs):
         super(Authenticator, self).__init__(*args, **kwargs)
-        self.credentials = None
+        self._add_provider_option('token',
+                                  f'Token for the Njalla API',
+                                   'auth_token')
 
     @classmethod
     def add_parser_arguments(cls, add):
@@ -35,54 +34,9 @@ class Authenticator(dns_common.DNSAuthenticator):
             + "the Njalla REST API."
         )
 
-    def _setup_credentials(self):
-        self._configure_file('credentials',
-                             'Absolute path to Njalla credentials INI file')
-        dns_common.validate_file_permissions(self.conf('credentials'))
-        self.credentials = self._configure_credentials(
-            "credentials",
-            "Njalla credentials INI file",
-            {
-                "token": "Token for the Njalla API.",
-            },
-        )
-
-    def _remove_subdomains(self, domain):
-        split_domain = domain.split('.')
-        return f'{split_domain[-2]}.{split_domain[-1]}'
-
-    def _perform(self, domain, validation_name, validation):
-        self._get_njalla_client().add_txt_record(
-            self._remove_subdomains(domain), validation_name, validation
-        )
-
-    def _cleanup(self, domain, validation_name, validation):
-        self._get_njalla_client().del_txt_record(
-            self._remove_subdomains(domain), validation_name, validation
-        )
-
-    def _get_njalla_client(self):
-        return _NjallaLexiconClient(
-            self.credentials.conf("token"),
-            self.ttl
-        )
-
-
-class _NjallaLexiconClient(dns_common_lexicon.LexiconClient):
-    """
-    Encapsulates all communication with the Njalla API via Lexicon.
-    """
-
-    def __init__(self, api_token, ttl):
-        super(_NjallaLexiconClient, self).__init__()
-
-        config = dns_common_lexicon.build_lexicon_config('njalla', {
-            'ttl': ttl,
-        }, {
-            'auth_token': api_token,
-        })
-
-        self.provider = njalla.Provider(config)
+    @property
+    def _provider_name(self) -> str:
+        return 'njalla'
 
     def _handle_http_error(self, e, domain_name):
         if domain_name in str(e) and (
@@ -92,4 +46,4 @@ class _NjallaLexiconClient(dns_common_lexicon.LexiconClient):
             str(e).startswith('404 Client Error: Not Found for url:')
         ):
             return  # Expected errors when zone name guess is wrong
-        return super(_NjallaLexiconClient, self)._handle_http_error(e, domain_name)
+        return super()._handle_http_error(e, domain_name)
