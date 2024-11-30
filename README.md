@@ -43,12 +43,6 @@ snap connect certbot:plugin certbot-dns-njalla
       <th> Setting </th><th> Value </th>
    </tr>
    <tr>
-      <td> Domains </td>
-      <td>
-      The domain you're creating certificates for
-      </td>
-   </tr>
-   <tr>
       <td> API Methods </td>
       <td>
 
@@ -124,7 +118,7 @@ python3 -m pip install --upgrade build twine
 python3 -m build
 
 # Publish to PyPi
-twine upload dist/* 
+twine upload dist/*
 ```
 
 ### Build snap locally
