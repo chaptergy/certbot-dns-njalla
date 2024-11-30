@@ -11,9 +11,11 @@ parts:
   certbot-dns-njalla:
     plugin: python
     source: .
+    # Write the constraints from the pyproject.toml to a separate file before running craftctl
     override-pull: |
+        grep -Poz '(?s)dependencies ?= ?\[\n[^\]]*\n\]' $SNAPCRAFT_PROJECT_DIR/pyproject.toml | sed '1d;$d' | tr -d "'\",[:blank:]" > $SNAPCRAFT_PART_SRC/snap-constraints.txt
         craftctl default
-        craftctl set version=$(grep ^version $SNAPCRAFT_PART_SRC/setup.py | cut -f2 -d= | tr -d "'[:space:]")
+        craftctl set version=$(grep ^version $SNAPCRAFT_PROJECT_DIR/pyproject.toml | cut -f2 -d= | tr -d "'\"[:space:]")
     build-environment:
       # We set this environment variable while building to try and increase the
       # stability of fetching the rust crates needed to build the cryptography

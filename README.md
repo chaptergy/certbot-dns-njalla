@@ -10,7 +10,7 @@ to allow customers to prove control of a domain name.
 Use this method if you have also installed `certbot` via `pip`.
 Install the plugin using
 
-```commandline
+```sh
 pip3 install certbot-dns-njalla
 ```
 
@@ -20,39 +20,86 @@ If you are using `sudo` with certbot use `sudo -H pip3 install certbot-dns-njall
 
 Use this method if you have also installed `certbot` via `snap`.
 
-```commandline
+```sh
 snap install certbot-dns-njalla
 ```
 
 Now connect the certbot installation with the njalla plugin installation.
 
-```commandline
-sudo snap connect certbot:plugin certbot-dns-njalla
+```sh
+snap set certbot trust-plugin-with-root=ok
+snap connect certbot:plugin certbot-dns-njalla
 ```
 
 ## Usage
 
-1. Make sure the plugin is installed and connected. You can verify this by running `certbot plugins`. `dns-njalla` should be in the list.
+1. Make sure the plugin is installed and connected. You can verify this by running `certbot plugins`. The list should contain `dns-njalla`.
 
-2. Obtain an Njalla API token (found in the [settings](https://njal.la/settings/api/))
+2. Obtain an Njalla API token (found in the [settings](https://njal.la/settings/api/)).\
+   For optimal security you can set these token settings:
 
-3. Create a `njalla.ini` config file with the following contents and apply `chmod 600 njalla.ini` on it:
+   <table>
+   <tr>
+      <th> Setting </th><th> Value </th>
+   </tr>
+   <tr>
+      <td> Domains </td>
+      <td>
+      The domain you're creating certificates for
+      </td>
+   </tr>
+   <tr>
+      <td> API Methods </td>
+      <td>
+
+      ```
+      get-domain
+      add-record
+      remove-record
+      ```
+      </td>
+   </tr>
+   <tr>
+      <td> API Record Prefixes </td>
+      <td>
+
+      ```
+      _acme-challenge
+      ```
+      </td>
+   </tr>
+   <tr>
+      <td> API Record Types </td>
+      <td>
+
+      ```
+      TXT
+      ```
+      </td>
+   </tr>
+   </table>
+
+3. Create a `njalla.ini` config file with the following contents:
 
    ```ini
    dns_njalla_token=<token>
    ```
 
    Replace `<token>` with your Njalla API key and ensure permissions are set
-   to disallow access to other users.
+   to disallow access to other users by running
+
+   ```sh
+   chmod 600 njalla.ini
+   ```
 
 4. Run `certbot` and direct it to use the plugin for authentication and to use
    the config file previously created:
 
    ```sh
-   certbot -a dns-njalla --dns-njalla-credentials njalla.ini -d domain.com
+   certbot -a dns-njalla --dns-njalla-credentials njalla.ini -d your-domain.com
    ```
 
-   Use `*.domain.com` if you want to generate it as a wildcard certificate.  
+   Use `*.your-domain.com` if you want to generate it as a wildcard certificate.  
    Add additional options as required to specify an installation plugin etc.
 
    Remember to use the `-i` flag if you want to use an additional installer plugin, like `-i apache` or `-i nginx`.
@@ -64,7 +111,20 @@ sudo snap connect certbot:plugin certbot-dns-njalla
 Run the following command in the repository root (so you are in the folder containing the `setup.py`):
 
 ```sh
-pip3 install -e ./
+pip3 install -e .[test]
+```
+
+### Build and publish to PyPi
+
+Run the following command in the repository root (so you are in the folder containing the `setup.py`):
+
+```sh
+# Ensure latest versions of "build" and "twine" are installed
+python3 -m pip install --upgrade build twine
+python3 -m build
+
+# Publish to PyPi
+twine upload dist/* 
 ```
 
 ### Build snap locally
@@ -75,7 +135,7 @@ Do the basic setup described in the [certbot snap readme](https://github.com/cer
 Run the following command in the repository root (so you are in the folder containing the `setup.py`):
 
 ```sh
-sh generate_dnsplugins_snapcraft.sh
+sh generate-snapcraft.sh ./
 snapcraft clean --use-lxd
 snapcraft --debug --use-lxd
 ```

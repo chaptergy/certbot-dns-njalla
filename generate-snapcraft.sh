@@ -1,14 +1,14 @@
 #!/bin/bash
-# Taken from https://github.com/certbot/certbot/blob/main/tools/snap/generate_dnsplugins_snapcraft.sh
-# Generate the snapcraft.yaml file for a DNS plugins
-# Usage: bash generate_dnsplugins_snapcraft.sh path/to/dns/plugin
-# For example, from the certbot home directory:
-#   tools/snap/generate_dnsplugins_snapcraft.sh certbot-dns-dnsimple
+# Modified version of https://github.com/certbot/certbot/blob/main/tools/snap/generate_dnsplugins_snapcraft.sh
+# Generate the snapcraft.yaml file for certbot-dns-njalla
+# Usage: bash generate-snapcraft.sh path/to/dns/plugin
+# For example, from the certbot plugin root directory:
+#   generate-snapcraft.sh ./
 set -e
 
 PLUGIN_PATH=$1
-PLUGIN=$(grep "[^_a-zA-Z]name" "${PLUGIN_PATH}/setup.py" | sed -E 's|\s+name="(.*)",|\1|g')
-DESCRIPTION=$(sed -E -n "/[[:space:]]+description=/ s/[[:space:]]+description=['\"](.*)['\"],/\1/ p" "${PLUGIN_PATH}/setup.py")
+PLUGIN=$(grep "^\w*name" "${PLUGIN_PATH}/pyproject.toml" | sed -E 's/[[:space:]]*name[[:space:]]*=[[:space:]]*"([^"]*)"/\1/')
+DESCRIPTION=$(grep "^\w*description" "${PLUGIN_PATH}/pyproject.toml" | sed -E 's/[[:space:]]*description[[:space:]]*=[[:space:]]*"([^"]*)"/\1/')
 mkdir -p "${PLUGIN_PATH}/snap"
 cat <<EOF > "${PLUGIN_PATH}/snap/snapcraft.yaml"
 # This file is generated automatically and should not be edited manually.
@@ -24,9 +24,11 @@ parts:
   ${PLUGIN}:
     plugin: python
     source: .
+    # Write the constraints from the pyproject.toml to a separate file before running craftctl
     override-pull: |
+        grep -Poz '(?s)dependencies ?= ?\[\n[^\]]*\n\]' \$SNAPCRAFT_PROJECT_DIR/pyproject.toml | sed '1d;\$d' | tr -d "'\",[:blank:]" > \$SNAPCRAFT_PART_SRC/snap-constraints.txt
         craftctl default
-        craftctl set version=\$(grep ^version \$SNAPCRAFT_PART_SRC/setup.py | cut -f2 -d= | tr -d "'[:space:]")
+        craftctl set version=\$(grep ^version \$SNAPCRAFT_PROJECT_DIR/pyproject.toml | cut -f2 -d= | tr -d "'\"[:space:]")
     build-environment:
       # We set this environment variable while building to try and increase the
       # stability of fetching the rust crates needed to build the cryptography
