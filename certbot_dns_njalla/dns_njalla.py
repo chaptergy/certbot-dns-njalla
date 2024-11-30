@@ -38,9 +38,20 @@ class Authenticator(dns_common_lexicon.LexiconDNSAuthenticator):
         return 'njalla'
 
     def _handle_http_error(self, e, domain_name: str) -> errors.PluginError:
+        # HTTP Errors are incorrectly thrown as a general error, so we need to handle both the same way
+        return self._handle_all_errors(e, domain_name)
+
+    def _handle_general_error(self, e, domain_name: str) -> errors.PluginError:
+        # HTTP Errors are incorrectly thrown as a general error, so we need to handle both the same way
+        return self._handle_all_errors(e, domain_name)
+
+    def _handle_all_errors(self, e, domain_name: str) -> errors.PluginError:
+        if str(e).startswith('403: Permission denied'):
+            return # Expected errors when zone name guess is wrong
+
         hint = None
-        if str(e).startswith('401 Client Error: Unauthorized for url:'):
-            hint = 'Is your API token value correct?'
+        if str(e).startswith('401:'):
+            hint = 'Does your token have the right permissions?'
 
         hint_disp = f' ({hint})' if hint else ''
 

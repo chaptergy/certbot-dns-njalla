@@ -48,6 +48,7 @@ snap connect certbot:plugin certbot-dns-njalla
 
       ```
       get-domain
+      list-records
       add-record
       remove-record
       ```
@@ -95,6 +96,8 @@ snap connect certbot:plugin certbot-dns-njalla
 
    Use `*.your-domain.com` if you want to generate it as a wildcard certificate.  
    Add additional options as required to specify an installation plugin etc.
+
+   You can use `--dns-njalla-propagation-seconds 30` to reduce the time it waits for DNS propagation to e.g. 30.
 
    Remember to use the `-i` flag if you want to use an additional installer plugin, like `-i apache` or `-i nginx`.
 

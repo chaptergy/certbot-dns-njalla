@@ -1,6 +1,6 @@
 [project]
 name = "certbot-dns-njalla"
-version = "2.0.1"
+version = "2.0.2"
 authors = [{ name = "chaptergy" }]
 license = {file = "LICENSE"}
 description = "Njalla DNS Authenticator plugin for Certbot"
