@@ -136,6 +136,8 @@ snapcraft clean --use-lxd
 snapcraft --debug --use-lxd
 ```
 
+Snapcraft will automatically build the snap package on changes to the git repo. However after this build, the snap needs to be promoted to stable, as otherwise it will only be available on edge.
+
 ### Run tests
 
 Execute the following command inside the root-directory
@@ -147,3 +149,4 @@ python -m unittest discover -p '*_test.py'
 ## Distribution
 
 - PyPI: https://pypi.org/project/certbot-dns-njalla/
+- Snap: https://snapcraft.io/certbot-dns-njalla/
