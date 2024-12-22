@@ -7,14 +7,13 @@ to allow customers to prove control of a domain name.
 
 ### Python / pip
 
-Use this method if you have also installed `certbot` via `pip`.
-Install the plugin using
+Use this method if you have installed `certbot` via `pip` and have followed the official setup within a python virtual environemnt:
 
 ```sh
-pip3 install certbot-dns-njalla
+/opt/certbot/bin/pip install certbot-dns-njalla
 ```
 
-If you are using `sudo` with certbot use `sudo -H pip3 install certbot-dns-njalla` instead.
+If you have a different environment, you need to adapt this `pip install` command to the python enviroment manager of your choice. The package name `certbot-dns-njalla` remains the same.
 
 ### Snap
 
