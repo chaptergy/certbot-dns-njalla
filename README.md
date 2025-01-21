@@ -3,6 +3,10 @@
 This is a plugin for [Certbot](https://certbot.eff.org/) that uses the [Njalla](https://njal.la/) API
 to allow customers to prove control of a domain name.
 
+## Maintenance status
+
+As I am currently not actively using this myself, I am also not very active with maintenance. Responses or fixes might take quite a while.
+
 ## Installation
 
 ### Python / pip
@@ -90,15 +94,13 @@ snap connect certbot:plugin certbot-dns-njalla
    the config file previously created:
 
    ```sh
-   certbot -a dns-njalla --dns-njalla-credentials njalla.ini -d your-domain.com
+   certbot certonly --standalone -a dns-njalla --dns-njalla-credentials njalla.ini -d your-domain.com
    ```
 
    Use `*.your-domain.com` if you want to generate it as a wildcard certificate.  
-   Add additional options as required to specify an installation plugin etc.
+   Modify or add certbot options to align with your environment, like running web servers, etc.
 
    You can use `--dns-njalla-propagation-seconds 30` to reduce the time it waits for DNS propagation to e.g. 30.
-
-   Remember to use the `-i` flag if you want to use an additional installer plugin, like `-i apache` or `-i nginx`.
 
 ## Development
 
