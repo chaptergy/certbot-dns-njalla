@@ -94,7 +94,7 @@ snap connect certbot:plugin certbot-dns-njalla
    the config file previously created:
 
    ```sh
-   certbot certonly --standalone -a dns-njalla --dns-njalla-credentials njalla.ini -d your-domain.com
+   certbot certonly -a dns-njalla --dns-njalla-credentials njalla.ini -d your-domain.com
    ```
 
    Use `*.your-domain.com` if you want to generate it as a wildcard certificate.  
